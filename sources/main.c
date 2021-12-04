@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/03 18:46:49 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/04 18:35:39 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,11 @@
 
 void	check_map_extension(char *argv)
 {
-	char *ext;
+	char *s;
 
-	ext = malloc(sizeof(char *));
-	ext = ft_strnstr(argv, ".", 1);
-	printf("%s\n", ext);
-	if (strcmp(ext, "ber"))
-	{
-		ft_putstr_fd("Error. Map has not right extension.\n", 2);
-		exit(1);
-	}
+	s = ft_strchr(argv, '.');
+	if (!s || ft_strncmp(s, ".ber", 5) != 0)
+		printf("Error - not right extension");
 }
 
 int	main(int argc, char **argv)
@@ -33,6 +28,6 @@ int	main(int argc, char **argv)
 		check_map_extension(argv[1]);
 	}
 	else
-		ft_putstr_fd("Error.\nWrong number of arguments.\n", 2);
+		ft_putstr_fd("Error. Wrong number of arguments.\n", 2);
 	return (0);
 }

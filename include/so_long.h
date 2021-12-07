@@ -6,29 +6,46 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/04 20:00:44 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/06 20:31:08 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
-//# include "./minilibx/mlx.h"
 
+//# include "./minilibx/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
-# include <fcntl.h>
+# include <fcntl.h>		/* open */
 # include "../libft/libft.h"
+
+# define BUFFER_SIZE 1
+# define M 64
+# define A 97
+# define W 119
+# define D 100
+# define S 115
+# define ESC 65307
 
 typedef struct s_map
 {
 	int		lines;
-	int		col;
+	int		cols;
 	char	**map2d;
 }				t_map;
 
 int		main(int argc, char **argv);
-void	check_map_extension(char *argv);
 
+/* get_next_line */
+int	stvar_next_line(int ret, char **stvar, char **line);
+int	get_next_line(int fd, char **line);
+int	memclear(char **pointer);
+
+/* check map */
+void	check_map_extension(char *argv);
+void	init_map(t_map map);
+void	read_map(t_map map, char *file, char **line);
+// void	check_map(char *argv, t_map map);
 #endif

@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/03 18:48:17 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/06 20:06:23 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ INC_DIR		= include/
 LIBFT		= libft.a
 LIBFT_DIR	= libft/
 
-SRCS 		= main.c \
+SRCS 		= 	main.c \
+				get_next_line.c \
 
 OBJS 		= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
@@ -42,12 +43,12 @@ all: ${NAME}
 
 $(OBJ_DIR)%.o : $(SRCS_DIR)%.c
 	mkdir -p $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(MFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
 	@echo $(YELLOW) "==== Compilation of Libft and Minilibx Libraries==== " $(NONE)
 	make -C $(LIBFT_DIR)
-	${CC} $(CFLAGS) $(MFLAGS) $(LFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
+	${CC} $(CFLAGS) $(LFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
 	@echo $(GREEN) "======== COMPILED  ==========" $(NONE)
 
 clean:

@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/06 20:06:23 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/07 19:20:01 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ LIBFT_DIR	= libft/
 
 SRCS 		= 	main.c \
 				get_next_line.c \
+				error.c
 
 OBJS 		= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 

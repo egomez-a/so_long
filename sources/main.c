@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/09 19:27:24 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/10 10:59:16 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,50 +56,65 @@ void	check_map_borders(t_map map, char **matrix)
 }
 
 /* Count number of lines */
-static int	read_map(t_map map, char **argv, char *file)
+static int	map_lines(int fd)
 {
-	int		fd;
+	int 	mlines;
 	int		char_counter;
 	char	c;
-	int 	i;
-
-	fd = open(file, O_RDONLY);
-	printf("file descriptor is %d\n", fd);
-	check_fd(fd);
-	map.lines = 1;
-	while (map.lines > 0)
+	
+	mlines = 1;
+	while (mlines > 0)
 	{
 		char_counter = read(fd, &c, 1);
-		if (char_counter == 0);
+		if (char_counter == 0)
 			break ;
 		if (char_counter < 0)
 		{
 			perror("Opening file error - no lines");
 			return (-1);
 		}	
-		if (char_counter == '\n');
-			map.lines++;
+		if (char_counter == '\n')
+			mlines++;
 	}
 	close(fd);
-	printf("Lines are %d\n", map.lines);
-	/* Allocate memory for a string array with the lines of the file */
-	map.map2d = malloc(sizeof(char *) * map.lines + 1);
-	if (map.map2d == NULL)
-		perror("Malloc error");
-	/* Creates -with malloc- a 2D char map as found in file */
-	fd = open(file, O_RDONLY);
-	i = 0;
-	while (get_next_line(fd, &map.map2d[i++]))
-		;
-	map[i] = NULL;
-	map.cols = 0;
+	printf("Lines are %d\n", mlines);
+	return (mlines);
+}
+
+static int	map_columns(t_map map)
+{
+	int mcolumns;
+	
+	mcolumns = 0;
 	while (map.map2d[0])
 	{
 		if (map.map2d[0][map.cols] == '\0' || map.map2d[0][map.cols] == '\n')
 			break;
-		map.cols++;
-	printf("Lines %d\n", map.lines);
+		mcolumns++;
+	}
 	printf("columns %d\n", map.cols);
+	return (mcolumns);
+}
+
+void	read_map(t_map map, char **argv)
+{
+	int		fd;
+	int 	i;
+	int 	j;
+
+	fd = open(argv[1], O_RDONLY);
+	printf("file descriptor is %d\n", fd);
+	check_fd(fd);
+	map.lines = map_lines(fd);
+	map.map2d = malloc(sizeof(char *) * map.lines + 1);
+	if (map.map2d == NULL)
+		perror("Malloc error");
+	map.cols = map_columns(map);
+	fd = open(argv[1], O_RDONLY);
+	i = 0;
+	while (get_next_line(fd, &map.map2d[i++]))
+		;
+	map.map2d[i] = NULL;
 	i = 0;
 	while (map.map2d[i])
 	{
@@ -112,21 +127,19 @@ static int	read_map(t_map map, char **argv, char *file)
 		printf("\n");
 		i++;
 	}
-}
 	close(fd);
-	return (1);
+	return ;
 }
 
 int	main(int argc, char **argv)
 {
 	t_map	map;
-	char 	*line;
 
 	map.lines = 0;
 	if (argc == 2)
 	{
 		check_map_extension(argv[1]);
-		read_map(map, argv[1], &line);
+		read_map(map, &argv[1]);
 	}
 	else
 		ft_putstr_fd("Error. Wrong number of arguments.\n", 2);

@@ -6,11 +6,46 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:16:05 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/06 13:06:48 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/13 13:29:45 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
+
+int	getnextline(int fd, char **line)
+{
+	int		bufferbytes;
+	char	buffer[1];
+	int		i;
+	char	*join;
+
+	*line = malloc(1);
+	if (!(*line) || (!line))
+		return (-1);
+	bufferbytes = read(fd, buffer, 1);
+	while (bufferbytes > 0)
+	{
+		if (buffer[0] == '\0' || buffer[0] == '\n')
+			break; 
+		i = 0;
+		while ((*line)[i])
+			i++;
+		join = malloc(i + 2);
+		if (join == 0)
+			return (-1); 
+		i = 0;
+		while ((*line)[i] != '\0')
+		{
+			join[i] = (*line)[i];
+			i++;
+		}	
+		join[i++] = buffer[0];
+		join[i++] = '\0';
+		free (*line);
+		*line = join; 
+	}
+	return (bufferbytes);
+}
 
 int	memclear(char **pointer)
 {

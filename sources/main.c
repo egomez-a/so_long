@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/10 10:59:16 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/13 14:02:33 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,21 @@ void	check_map_borders(t_map map, char **matrix)
 static int	map_lines(int fd)
 {
 	int 	mlines;
-	int		char_counter;
+	int		char_buffer;
 	char	c;
-	
+
 	mlines = 1;
 	while (mlines > 0)
 	{
-		char_counter = read(fd, &c, 1);
-		if (char_counter == 0)
+		char_buffer = read(fd, &c, 1);
+		if (char_buffer == 0)
 			break ;
-		if (char_counter < 0)
+		if (char_buffer < 0)
 		{
 			perror("Opening file error - no lines");
 			return (-1);
 		}	
-		if (char_counter == '\n')
+		if (c == '\n')
 			mlines++;
 	}
 	close(fd);
@@ -81,40 +81,26 @@ static int	map_lines(int fd)
 	return (mlines);
 }
 
-static int	map_columns(t_map map)
-{
-	int mcolumns;
-	
-	mcolumns = 0;
-	while (map.map2d[0])
-	{
-		if (map.map2d[0][map.cols] == '\0' || map.map2d[0][map.cols] == '\n')
-			break;
-		mcolumns++;
-	}
-	printf("columns %d\n", map.cols);
-	return (mcolumns);
-}
-
-void	read_map(t_map map, char **argv)
+void	read_map(t_map map, char *file)
 {
 	int		fd;
 	int 	i;
 	int 	j;
 
-	fd = open(argv[1], O_RDONLY);
+	fd = open(file, O_RDONLY);
 	printf("file descriptor is %d\n", fd);
 	check_fd(fd);
 	map.lines = map_lines(fd);
 	map.map2d = malloc(sizeof(char *) * map.lines + 1);
 	if (map.map2d == NULL)
 		perror("Malloc error");
-	map.cols = map_columns(map);
-	fd = open(argv[1], O_RDONLY);
+	fd = open(file, O_RDONLY);
 	i = 0;
-	while (get_next_line(fd, &map.map2d[i++]))
-		;
+	while (get_next_line(fd, &map.map2d[i]) > 0)
+		i++;
 	map.map2d[i] = NULL;
+	close(fd);
+	// map_columns(map);
 	i = 0;
 	while (map.map2d[i])
 	{
@@ -127,6 +113,7 @@ void	read_map(t_map map, char **argv)
 		printf("\n");
 		i++;
 	}
+	printf ("Columns are %d\n", j);
 	close(fd);
 	return ;
 }
@@ -139,7 +126,7 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 	{
 		check_map_extension(argv[1]);
-		read_map(map, &argv[1]);
+		read_map(map, argv[1]);
 	}
 	else
 		ft_putstr_fd("Error. Wrong number of arguments.\n", 2);

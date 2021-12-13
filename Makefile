@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/07 19:20:01 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/13 13:22:33 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ PATH_MLX	= minilibx
 
 CC 			= gcc
 CFLAGS		= -Wall -Wextra -Werror
-DEBUGGING	= -g#3 -fsanitize=address -O0
+DEBUGGING	= -g3 -fsanitize=address -O0
 LFLAGS		= -I$(INC_DIR)
 RM			= rm -rf
 NORM		= /usr/bin/norminette
@@ -49,7 +49,7 @@ $(OBJ_DIR)%.o : $(SRCS_DIR)%.c
 $(NAME): $(OBJS)
 	@echo $(YELLOW) "==== Compilation of Libft and Minilibx Libraries==== " $(NONE)
 	make -C $(LIBFT_DIR)
-	${CC} $(CFLAGS) $(LFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
+	${CC} $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
 	@echo $(GREEN) "======== COMPILED  ==========" $(NONE)
 
 clean:

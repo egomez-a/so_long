@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/15 14:31:35 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/15 15:20:45 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,19 @@
 # define S 115
 # define ESC 65307
 
+typedef struct s_ele
+{
+	int		collection;
+	int		m_exit;
+	int		initial_pos;	
+}				t_ele;
+
 typedef struct s_map
 {
 	int		lines;
 	int		cols;
 	char	**map2d;
+	t_ele	elems;
 }				t_map;
 
 int		main(int argc, char **argv);
@@ -48,6 +56,7 @@ void	check_map_extension(char *argv);
 void	init_map(t_map map);
 void	read_map(t_map map, char *file);
 void	check_map_borders(t_map map);
+void	check_map_elements(t_map map);
 void	print_map(t_map map);
 
 /* errors */

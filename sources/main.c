@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/15 15:31:14 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/15 15:34:54 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	check_map_borders(t_map map)
 	}
 }
 
+/* Check at least one element required */
 void	check_map_elements(t_map map)
 {
 	int i;
@@ -64,32 +65,22 @@ void	check_map_elements(t_map map)
 	
 
 	i = 1;
-	while (i < map.lines - 2)
+	while (i < map.lines - 1)
 	{
 		j = 1;
-		while (j < map.cols - 2)
+		while (j < map.cols - 1)
 		{
 			if (map.map2d[i][j] != '0' && map.map2d[i][j] != '1')
 			{
 				if (map.map2d[i][j] == 'E')
-				{
 					map.elems.m_exit++;
-					printf("%d %d - E\n", i, j);
-				}
 				else if (map.map2d[i][j] == 'C')
-				{
 					map.elems.collection++;
-					printf("%d %d - C\n", i, j);
-				}
 				else if (map.map2d[i][j] == 'P')
-				{
 					map.elems.initial_pos++;
-					printf("%d %d - P\n", i, j);
-				}
 				else 
 				{	
 					perror("Error - non valid map element\n");
-					printf("%d %d - %c\n", i, j, map.map2d[i][j]);
 					return ;
 				}
 			}
@@ -97,9 +88,9 @@ void	check_map_elements(t_map map)
 		}
 		i++;
 	}
-	printf("Map Exit = %d\n", map.elems.m_exit);
-	printf("Initial position = %d\n", map.elems.initial_pos);
-	printf("Collectionables = %d\n", map.elems.collection);
+	// printf("Map Exit = %d\n", map.elems.m_exit);
+	// printf("Initial position = %d\n", map.elems.initial_pos);
+	// printf("Collectionables = %d\n", map.elems.collection);
 	if (map.elems.m_exit < 1)
 		perror("Error - missing map exit\n");
 	if (map.elems.collection < 1)

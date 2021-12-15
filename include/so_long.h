@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/15 14:05:56 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:31:35 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	memclear(char **pointer);
 void	check_map_extension(char *argv);
 void	init_map(t_map map);
 void	read_map(t_map map, char *file);
-
-// void	check_map(char *argv, t_map map);
+void	check_map_borders(t_map map);
+void	print_map(t_map map);
 
 /* errors */
 void	check_fd(int fd);

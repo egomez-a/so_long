@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/15 14:23:44 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:42:03 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,36 @@ void	check_map_extension(char *file)
 	}
 }
 
-void	check_map_borders(t_map map, char **matrix)
+void	check_map_borders(t_map map)
 {
 	int i;
 
 	i = 0;
 	while (i < map.cols)
 	{
-		if (matrix[0][i] != 1 || (matrix[map.lines - 1][i] != 1))
-			printf("Error - map not correct");
+		if (map.map2d[0][i] != '1' || (map.map2d[map.lines - 1][i] != '1'))
+		{
+			printf("%d  -  %c %c\n", i, map.map2d[0][i], map.map2d[map.lines - 1][i]);
+			perror("Error - horizontal borders not right\n");
+			exit (11);
+		}
 		i++;
 	}
 	i = 0;
 	while (i < map.lines)
 		{
-		if (matrix[i][0] != 1 || (matrix[map.cols - 1][i] != 1))
-			printf("Error - map not correct");
+		if (map.map2d[i][0] != '1' || (map.map2d[i][map.cols - 1] != '1'))
+		{
+			perror("Error - vertical borders not right\n");
+			exit (12);
+		}
 		i++;
 	}
+}
+
+void	check_map_elements(t_map map)
+{
+	
 }
 
 /* Count number of lines */
@@ -76,7 +88,8 @@ static int	map_lines(int fd)
 	return (mlines);
 }
 
-int	check_columns(int i, t_map map)
+/* Count number of columns and check if the map is rectangular */
+static int	check_columns(int i, t_map map)
 {
 	int columns;
 	
@@ -100,6 +113,7 @@ int	check_columns(int i, t_map map)
 	return (0);
 }
 
+/* Prints map for testing */
 void	print_map(t_map map)
 {
 	int i;
@@ -141,13 +155,14 @@ void	read_map(t_map map, char *file)
 		map.cols = check_columns(i, map);
 		if (map.cols == -1)
 		{
-			printf("Error: Map not rentangular\n");
+			perror("Error: Map not rentangular\n");
 			return ;
 		}
 		i++;
 	}
 	map.map2d[i] = NULL;
 	close(fd);
+	check_map_borders(map);
 	print_map(map);
 	return ;
 }

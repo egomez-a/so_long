@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/13 14:02:33 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:23:44 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,6 @@ void	check_map_extension(char *file)
 		exit (10);
 	}
 }
-
-// void	check_map_content(t_map map, char **matrix)
-// {
-	
-// }
 
 void	check_map_borders(t_map map, char **matrix)
 {
@@ -81,28 +76,37 @@ static int	map_lines(int fd)
 	return (mlines);
 }
 
-void	read_map(t_map map, char *file)
+int	check_columns(int i, t_map map)
 {
-	int		fd;
-	int 	i;
-	int 	j;
+	int columns;
+	
+	if (i == 0)
+	{
+		columns = (int)ft_strlen(map.map2d[i]);
+		return (columns);
+	}
+	else if (i > 0)
+	{
+		if ((int)ft_strlen(map.map2d[i]) == map.cols)
+		{
+			columns = (int)ft_strlen(map.map2d[i]);
+			return (columns);
+		}
+		else
+		{	
+			return (-1);
+		}
+	}
+	return (0);
+}
 
-	fd = open(file, O_RDONLY);
-	printf("file descriptor is %d\n", fd);
-	check_fd(fd);
-	map.lines = map_lines(fd);
-	map.map2d = malloc(sizeof(char *) * map.lines + 1);
-	if (map.map2d == NULL)
-		perror("Malloc error");
-	fd = open(file, O_RDONLY);
+void	print_map(t_map map)
+{
+	int i;
+	int j;
+	
 	i = 0;
-	while (get_next_line(fd, &map.map2d[i]) > 0)
-		i++;
-	map.map2d[i] = NULL;
-	close(fd);
-	// map_columns(map);
-	i = 0;
-	while (map.map2d[i])
+	while (i < map.lines)
 	{
 		j = 0;
 		while (map.map2d[i][j] != '\0')
@@ -114,7 +118,37 @@ void	read_map(t_map map, char *file)
 		i++;
 	}
 	printf ("Columns are %d\n", j);
+}
+
+void	read_map(t_map map, char *file)
+{
+	int		fd;
+	int 	i;
+	int 	gnl;
+
+	fd = open(file, O_RDONLY);
+	printf("file descriptor is %d\n", fd);
+	check_fd(fd);
+	map.lines = map_lines(fd);
+	map.map2d = malloc(sizeof(char *) * (map.lines + 1));
+	if (map.map2d == NULL)
+		perror("Malloc error");
+	fd = open(file, O_RDONLY);
+	i = 0;
+	while (i < map.lines)
+	{
+		gnl = get_next_line(fd, &map.map2d[i]);
+		map.cols = check_columns(i, map);
+		if (map.cols == -1)
+		{
+			printf("Error: Map not rentangular\n");
+			return ;
+		}
+		i++;
+	}
+	map.map2d[i] = NULL;
 	close(fd);
+	print_map(map);
 	return ;
 }
 

@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/13 13:22:33 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/17 10:17:07 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ DEBUGGING	= -g3 -fsanitize=address -O0
 LFLAGS		= -I$(INC_DIR)
 RM			= rm -rf
 NORM		= /usr/bin/norminette
-MFLAGS		= #-Lmlx -lmlx -framework OpenGL -framework AppKit
+MFLAGS		= -Lmlx -lmlx -framework OpenGL -framework AppKit
 NOW			= $(shell date +"%d-%m-%y %H:%M")
 
 NONE		=	'\033[0m'
@@ -44,12 +44,12 @@ all: ${NAME}
 
 $(OBJ_DIR)%.o : $(SRCS_DIR)%.c
 	mkdir -p $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(MFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
 	@echo $(YELLOW) "==== Compilation of Libft and Minilibx Libraries==== " $(NONE)
 	make -C $(LIBFT_DIR)
-	${CC} $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
+	${CC} $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(MFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
 	@echo $(GREEN) "======== COMPILED  ==========" $(NONE)
 
 clean:

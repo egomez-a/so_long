@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/15 15:20:45 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/17 15:57:23 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <string.h>
 # include <fcntl.h>		/* open */
 # include "../libft/libft.h"
+# include <mlx.h>
 
 # define BUFFER_SIZE 1
 # define M 64
@@ -28,7 +29,48 @@
 # define D 100
 # define S 115
 # define ESC 65307
+# define ANIMATION_FRAMES 10
 
+/* vector with an x and y */
+typedef struct	s_vector
+{
+	int	x;
+	int	y;
+}				t_vector;
+
+/* A pointer to the window and its size */
+typedef struct	s_window {
+	void		*reference;
+	t_vector	size;
+}				t_window;
+
+/* The 4 values that define a color */
+typedef struct s_color {
+	int	r;
+	int g;
+	int b;
+	int a;
+}	t_color;
+
+/* all info needed for an image */
+typedef struct	s_image {
+	void		*reference;
+	t_vector	size;
+	char		*pixels;
+	int			bits_per_pixel;
+	int			line_size;
+	int			endian;
+}				t_image;
+
+/* the program to create windows */
+typedef struct	s_program {
+	void		*mlx;
+	t_window	window;
+	t_image		sprite;
+	t_vector	sprite_position;
+}				t_program;
+
+/* Map elements: collectbles, exit and initial position */
 typedef struct s_ele
 {
 	int		collection;
@@ -36,6 +78,7 @@ typedef struct s_ele
 	int		initial_pos;	
 }				t_ele;
 
+/* Map structure, with lines, columns, matrix and elements */
 typedef struct s_map
 {
 	int		lines;
@@ -47,17 +90,33 @@ typedef struct s_map
 int		main(int argc, char **argv);
 
 /* get_next_line */
-int	stvar_next_line(int ret, char **stvar, char **line);
-int	get_next_line(int fd, char **line);
-int	memclear(char **pointer);
+int		stvar_next_line(int ret, char **stvar, char **line);
+int		get_next_line(int fd, char **line);
+int		memclear(char **pointer);
 
 /* check map */
 void	check_map_extension(char *argv);
 void	init_map(t_map map);
-void	read_map(t_map map, char *file);
+t_map	read_map(char *file);
 void	check_map_borders(t_map map);
 void	check_map_elements(t_map map);
 void	print_map(t_map map);
+int		map_lines(int fd);
+int		check_columns(int i, t_map map);
+
+/* window creation */
+void		open_window(t_map map);
+t_window	ft_new_window(void *mlx, int widht, int height, char *name);
+int 		ft_close ();
+
+/* include sprites */
+t_image ft_new_image(void* mlx, int width, int height);
+t_image ft_new_sprite(void *mlx, char *path);
+
+/* Hooks */
+int	ft_input(int key, void *param);
+int	ft_update (void *param);
+
 
 /* errors */
 void	check_fd(int fd);

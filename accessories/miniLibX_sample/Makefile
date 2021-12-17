@@ -13,7 +13,7 @@ CURSIVE='\033[3m'
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@cd ../minilibx make
+	@cd minilibx/ make
 	@echo $(CURSIVE)$(GRAY) "     - Compiling $(NAME)..." $(NONE)
 	@gcc $(FLAGS) $(OBJ) $(LINKS) -o $(NAME)
 	@echo $(GREEN)"- Compiled -"$(NONE)

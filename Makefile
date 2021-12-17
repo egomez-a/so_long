@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/17 10:21:04 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/17 14:03:38 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,12 +18,13 @@ LIBFT		= libft.a
 LIBFT_DIR	= libft/
 
 SRCS 		= 	main.c \
+				map2d.c \
 				get_next_line.c \
-				error.c
+				error.c 
 
 OBJS 		= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
-PATH_MLX	= minilibx
+PATH_MLX	= minilibx/
 
 CC 			= gcc
 CFLAGS		= -Wall -Wextra -Werror -Imlx
@@ -31,7 +32,7 @@ DEBUGGING	= -g3 -fsanitize=address -O0
 LFLAGS		= -I$(INC_DIR)
 RM			= rm -rf
 NORM		= /usr/bin/norminette
-MFLAGS		= -Lmlx -lmlx -framework OpenGL -framework AppKit
+MFLAGS		= -lmlx -framework OpenGL -framework AppKit 
 NOW			= $(shell date +"%d-%m-%y %H:%M")
 
 NONE		=	'\033[0m'
@@ -47,6 +48,7 @@ $(OBJ_DIR)%.o : $(SRCS_DIR)%.c
 	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
+	@cd $(PATH_MLX) make
 	@echo $(YELLOW) "==== Compilation of Libft and Minilibx Libraries==== " $(NONE)
 	make -C $(LIBFT_DIR)
 	${CC} $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(MFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)

@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/17 10:17:07 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/17 10:21:04 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJS 		= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 PATH_MLX	= minilibx
 
 CC 			= gcc
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -Imlx
 DEBUGGING	= -g3 -fsanitize=address -O0
 LFLAGS		= -I$(INC_DIR)
 RM			= rm -rf
@@ -44,7 +44,7 @@ all: ${NAME}
 
 $(OBJ_DIR)%.o : $(SRCS_DIR)%.c
 	mkdir -p $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(MFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
 	@echo $(YELLOW) "==== Compilation of Libft and Minilibx Libraries==== " $(NONE)

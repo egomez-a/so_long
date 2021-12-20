@@ -6,28 +6,26 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/17 15:57:23 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/20 12:32:32 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-//# include "./minilibx/mlx.h"
+# include "../minilibx/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>	/* read */
 # include <unistd.h>
 # include <string.h>
 # include <fcntl.h>		/* open */
 # include "../libft/libft.h"
-# include <mlx.h>
 
 # define BUFFER_SIZE 1
-# define M 64
-# define A 97
-# define W 119
-# define D 100
-# define S 115
+# define A 97		/* left */
+# define W 119		/* up */
+# define D 100		/* right */
+# define S 115		/* down */
 # define ESC 65307
 # define ANIMATION_FRAMES 10
 
@@ -70,7 +68,7 @@ typedef struct	s_program {
 	t_vector	sprite_position;
 }				t_program;
 
-/* Map elements: collectbles, exit and initial position */
+/* Map elements: collectibles, exit and initial position */
 typedef struct s_ele
 {
 	int		collection;

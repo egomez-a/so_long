@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 14:02:41 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/17 16:01:16 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/20 11:13:04 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int	map_lines(int fd)
 			mlines++;
 	}
 	close(fd);
-	printf("Lines are %d\n", mlines);
+	// printf("Lines are %d\n", mlines);
 	return (mlines);
 }
 
@@ -168,7 +168,7 @@ void	print_map(t_map map)
 		printf("\n");
 		i++;
 	}
-	printf ("Columns are %d\n", j);
+	// printf ("Columns are %d\n", j);
 }
 
 t_map	read_map(char *file)
@@ -179,7 +179,7 @@ t_map	read_map(char *file)
 	t_map	map;
 
 	fd = open(file, O_RDONLY);
-	printf("file descriptor is %d\n", fd);
+	// printf("file descriptor is %d\n", fd);
 	check_fd(fd);
 	map.lines = map_lines(fd);
 	map.map2d = malloc(sizeof(char *) * (map.lines + 1));
@@ -202,7 +202,7 @@ t_map	read_map(char *file)
 	close(fd);
 	check_map_borders(map);
 	check_map_elements(map);
-	print_map(map);
-	printf("El mapa es de %d x %d\n\n", map.lines, map.cols);
+	// print_map(map);
+	// printf("El mapa es de %d x %d\n\n", map.lines, map.cols);
 	return (map);
 }

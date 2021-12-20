@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2021/12/17 14:03:38 by egomez-a         ###   ########.fr        #
+#    Updated: 2021/12/20 11:07:09 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ OBJ_DIR		= obj/
 INC_DIR		= include/
 LIBFT		= libft.a
 LIBFT_DIR	= libft/
+MLX			= minilibx/libmlx.dylib
 
 SRCS 		= 	main.c \
 				map2d.c \
@@ -27,12 +28,12 @@ OBJS 		= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 PATH_MLX	= minilibx/
 
 CC 			= gcc
-CFLAGS		= -Wall -Wextra -Werror -Imlx
+CFLAGS		= -Wall -Wextra -Werror
 DEBUGGING	= -g3 -fsanitize=address -O0
 LFLAGS		= -I$(INC_DIR)
 RM			= rm -rf
 NORM		= /usr/bin/norminette
-MFLAGS		= -lmlx -framework OpenGL -framework AppKit 
+MFLAGS		= -lz -framework OpenGL -framework AppKit 
 NOW			= $(shell date +"%d-%m-%y %H:%M")
 
 NONE		=	'\033[0m'
@@ -45,13 +46,13 @@ all: ${NAME}
 
 $(OBJ_DIR)%.o : $(SRCS_DIR)%.c
 	mkdir -p $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $(DEBUGGING) $(LFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(LFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
 	@cd $(PATH_MLX) make
 	@echo $(YELLOW) "==== Compilation of Libft and Minilibx Libraries==== " $(NONE)
 	make -C $(LIBFT_DIR)
-	${CC} $(CFLAGS) $(DEBUGGING) $(LFLAGS) $(MFLAGS) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
+	${CC} $(CFLAGS) $(LFLAGS) $(MFLAGS) $(MLX) $(LIBFT_DIR)$(LIBFT) -o $(NAME) $(OBJS)
 	@echo $(GREEN) "======== COMPILED  ==========" $(NONE)
 
 clean:

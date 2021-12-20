@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/20 12:29:43 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/20 19:37:40 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,32 @@ int ft_close ()
 /* Any functon that you hook with the key event must be like this:
 * Recibing and int for the code of the key pressed
 * and a void pointer in case you need to recibe someting */
-int	ft_input(int key, void *param)
-{
-	t_program *program = (t_program *)param;
+// int	ft_input(int key, void *param, t_map map)
+// {
+// 	t_program *program = (t_program *)param;
 
-	mlx_clear_window(program->mlx, program->window.reference);
-	if (key == A)
-		program->sprite_position.x += program->sprite.size.x;
-	else if (key == 123)
-		program->sprite_position.x -= program->sprite.size.x;
-	else if (key == 125)
-		program->sprite_position.y += program->sprite.size.y;
-	else if (key == 126)
-		program->sprite_position.y -= program->sprite.size.y;
+// 	mlx_clear_window(program->mlx, program->window.reference);
+// 	if (key == A)
+// 	{
+// 		check_movement(key, map);
+// 	}
+// 	// 	program->sprite_position.x += program->sprite.size.x;
+// 	// else if (key == 123)
+// 	// 	program->sprite_position.x -= program->sprite.size.x;
+// 	// else if (key == 125)
+// 	// 	program->sprite_position.y += program->sprite.size.y;
+// 	// else if (key == 126)
+// 	// 	program->sprite_position.y -= program->sprite.size.y;
 
-	// mlx function that puts and image into a window at a given position
-	// (the position 0,0 is the upper-left corner)
-	mlx_put_image_to_window(program->mlx, program->window.reference,
-		program->sprite.reference, program->sprite_position.x, program->sprite_position.y);
+// 	// mlx function that puts and image into a window at a given position
+// 	// (the position 0,0 is the upper-left corner)
+// 	mlx_put_image_to_window(program->mlx, program->window.reference,
+// 		program->sprite.reference, program->sprite_position.x, program->sprite_position.y);
 
-	// print the key pressed so you know the number of each key
-	printf("Key pressed -> %d\n", key);
-	return (0);
-}
+// 	// print the key pressed so you know the number of each key
+// 	printf("Key pressed -> %d\n", key);
+// 	return (0);
+// }
 
 int	ft_update (void *param)
 {
@@ -141,14 +144,8 @@ char	*get_path_of_sprite(t_map map, t_vector position)
 	return (path);
 }
 
-
-void	open_window(t_map map)
+void	paint_game(t_map map, t_program program)
 {
-	t_program	program;
-
-	program.mlx = mlx_init();
-	// printf("Creado el puntero mlx para mapa de %d por %d\n", map.cols, map.lines);
-	program.window = ft_new_window(program.mlx, map.cols * 32, map.lines * 32, "Bienvenido al juego de so_long!");
 	program.sprite_position.x = 0;
 	while (program.sprite_position.x < map.cols * 32)
 	{
@@ -162,7 +159,15 @@ void	open_window(t_map map)
 		}
 		program.sprite_position.x += 32;
 	}
-	// hook the input() (hooks.c) function to the the key pressed event
+}
+
+void	open_window(t_map map)
+{
+	t_program	program;
+
+	program.mlx = mlx_init();
+	program.window = ft_new_window(program.mlx, map.cols * 32, map.lines * 32, "Bienvenido al juego de so_long!");
+	paint_game(map, program);
 	// mlx_key_hook(program.window.reference, *ft_input, &program);
 	// hook a function to the loop (it would be called each frame)
 	// mlx_loop_hook(program.mlx, *ft_update, &program);

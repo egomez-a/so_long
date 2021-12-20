@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/20 12:32:32 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/20 19:06:57 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@
 # define S 115		/* down */
 # define ESC 65307
 # define ANIMATION_FRAMES 10
+
+/* coordinates of hero with an x and y */
+typedef struct	s_hero
+{
+	int	x;
+	int	y;
+}				t_hero;
 
 /* vector with an x and y */
 typedef struct	s_vector
@@ -71,8 +78,8 @@ typedef struct	s_program {
 /* Map elements: collectibles, exit and initial position */
 typedef struct s_ele
 {
-	int		collection;
-	int		m_exit;
+	int		collectible;
+	int		map_exit;
 	int		initial_pos;	
 }				t_ele;
 
@@ -83,6 +90,7 @@ typedef struct s_map
 	int		cols;
 	char	**map2d;
 	t_ele	elems;
+	t_hero	hero_pos;
 }				t_map;
 
 int		main(int argc, char **argv);

@@ -3,7 +3,7 @@ SRC = main.c window.c image.c color.c hooks.c
 OBJ = $(SRC:.c=.o)
 
 FLAGS = -Wall -Wextra -Werror
-LINKS = -lmlx -framework OpenGL -framework AppKit
+LINKS = -lz -framework OpenGL -framework AppKit
 
 NONE='\033[0m'
 GREEN='\033[32m'

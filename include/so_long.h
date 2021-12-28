@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/20 19:06:57 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/28 17:56:03 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define ESC 65307
 # define ANIMATION_FRAMES 10
 
-/* coordinates of hero with an x and y */
+/* hero coordinates with an x and y */
 typedef struct	s_hero
 {
 	int	x;
@@ -121,8 +121,6 @@ t_image ft_new_sprite(void *mlx, char *path);
 
 /* Hooks */
 int	ft_input(int key, void *param);
-int	ft_update (void *param);
-
 
 /* errors */
 void	check_fd(int fd);

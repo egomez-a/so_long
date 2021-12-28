@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/20 19:37:40 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/28 17:56:42 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,30 +46,6 @@ int ft_close ()
 // 	printf("Key pressed -> %d\n", key);
 // 	return (0);
 // }
-
-int	ft_update (void *param)
-{
-	t_program	*program = (t_program *)param;
-	// a static that saves how many frames have passed
-	static int	frame;
-
-	// add a frame and every x frames change the position by 1 pixel
-	// so it looks like its animated
-	frame++;
-	if (frame == ANIMATION_FRAMES)
-		program->sprite_position.y += 1;
-	// every x*2 frames go back that pixel to loop the animation
-	else if (frame >= ANIMATION_FRAMES * 2)
-	{
-		program->sprite_position.y -= 1;
-		frame = 0;
-	}
-	
-	mlx_put_image_to_window(program->mlx, program->window.reference,
-		program->sprite.reference, program->sprite_position.x, program->sprite_position.y);
-
-	return (0);
-}
 
 t_window	ft_new_window(void *mlx, int widht, int height, char *name)
 {

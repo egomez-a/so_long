@@ -1,7 +1,7 @@
 #ifndef SAMPLE_LIB_H
 # define SAMPLE_LIB_H
 
-# include <mlx.h>
+# include "minilibx/mlx.h"
 
 // ----------------------------------
 // MACROS

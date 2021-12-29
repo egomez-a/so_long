@@ -6,162 +6,192 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/28 17:56:42 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/29 07:29:42 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int ft_close ()
+int close_game(t_game *game)
 {
+	memclear(game->map.map2d);
+	mlx_destroy_image(game->mlx, game->img.collect);
+	mlx_destroy_image(game->mlx, game->img.wall);
+	mlx_destroy_image(game->mlx, game->img.hero);
+	mlx_destroy_image(game->mlx, game->img.floor);
+	mlx_destroy_image(game->mlx, game->img.exit);
+	mlx_destroy_window(game->mlx, game->window.reference);
+	free(game->mlx);
 	exit(0);
 }
 
-/* Any functon that you hook with the key event must be like this:
-* Recibing and int for the code of the key pressed
-* and a void pointer in case you need to recibe someting */
-// int	ft_input(int key, void *param, t_map map)
-// {
-// 	t_program *program = (t_program *)param;
+void	draw_image(t_game *game, void *image, int x, int y)
+{
+	int		xx;
+	int		yy;
 
-// 	mlx_clear_window(program->mlx, program->window.reference);
-// 	if (key == A)
-// 	{
-// 		check_movement(key, map);
-// 	}
-// 	// 	program->sprite_position.x += program->sprite.size.x;
-// 	// else if (key == 123)
-// 	// 	program->sprite_position.x -= program->sprite.size.x;
-// 	// else if (key == 125)
-// 	// 	program->sprite_position.y += program->sprite.size.y;
-// 	// else if (key == 126)
-// 	// 	program->sprite_position.y -= program->sprite.size.y;
+	xx = x * 32;
+	yy = y * 32;
+	mlx_put_image_to_window(game->mlx, game->window.reference, image, xx, yy);
+}
 
-// 	// mlx function that puts and image into a window at a given position
-// 	// (the position 0,0 is the upper-left corner)
-// 	mlx_put_image_to_window(program->mlx, program->window.reference,
-// 		program->sprite.reference, program->sprite_position.x, program->sprite_position.y);
+void	draw_hero(t_game *game, void *image, int x, int y)
+{
+	game->map.elems.hero.x = x;
+	game->map.elems.hero.y = y;
+	draw_image(game, image, x, y);
+}
 
-// 	// print the key pressed so you know the number of each key
-// 	printf("Key pressed -> %d\n", key);
-// 	return (0);
-// }
+void	draw_exit(t_game *game, int x, int y)
+{
+	if (game->collects == 0)
+	{
+		mlx_destroy_image(game->mlx, game->img.exit);
+		game->img.exit = mlx_xpm_file_to_image
+			(game->mlx, "images/exit.xpm", &game->img.img_w, &game->img.img_h);
+	}
+	draw_image(game, game->img.exit, x, y);
+}
 
-t_window	ft_new_window(void *mlx, int widht, int height, char *name)
+int	paint_game(t_game *game)
+{
+	int x;
+	int y;
+
+	y = 0;
+	while (game->map.map2d[y])
+	{
+		x = 0;
+		while (game->map.map2d[y][x])
+		{
+			if (game->map.map2d[y][x] == '1')
+				draw_image(game, game->img.wall, x, y);
+			else if (game->map.map2d[y][x] == '0')
+				draw_image(game, game->img.floor, x, y);
+			else if (game->map.map2d[y][x] == 'P')
+				draw_hero(game, game->img.hero, x, y);
+			else if (game->map.map2d[y][x] == 'C')
+				draw_image(game, game->img.collect, x, y);
+			else if (game->map.map2d[y][x] == 'E')
+				draw_exit(game, x, y);
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
+
+t_window	new_window(void *mlx, int widht, int height, char *name)
 {
 	t_window	window;
 
 	/* This mlx function creates a returns a pointer
 	to a new window with a given size and name */
 	window.reference = mlx_new_window(mlx, widht, height, name);
-	// printf("puntero creacion window es %p\n", window.reference);
+	printf("puntero creacion window es %p\n", window.reference);
 	window.size.x = widht;
 	window.size.y = height;
-
-	// Now we 'hook' the function ft_close() to the closing window event
-	mlx_hook(window.reference, 17, 0, ft_close, 0);
-
 	return (window);
 }
 
-/* Returns an image of <width> x <height> black pixels. */
-t_image ft_new_image(void* mlx, int width, int height)
+void		hero_up(t_game *game)
 {
-	t_image img;
-
-	/* mlx function that creates and returns a pointer
-	to an image of the given width and height */
-	img.reference = mlx_new_image(mlx, width, height);
-	img.size.x = width;
-	img.size.y = height;
-
-	/* mlx function that returs a pointer to the first pixel of the given image.
-	* ¡Pixels are not stored in a 2D table, just a single char[] array!
-	* the fuction also saves in the given pointers:
-	*	the bits per pixel (each pixel is usually 4 chars of the array),
-	* 	the line size of the pixels array  (the amount of pixels in one line of the image)
-	* 	and the endian (info of how the colors are stored) */
-	img.pixels = mlx_get_data_addr(img.reference, &img.bits_per_pixel, &img.line_size, &img.endian);
-
-	return (img);
-}
-
-/* Returns an image with the sprite found in <path> */
-t_image ft_new_sprite(void *mlx, char *path)
-{
-	t_image img;
-	
-	/* mlx function that creates and image that contains the xmp file found in the given path.
-	* It also saves the width and height of the image in the pointers passed as parameters */
-	img.reference = mlx_xpm_file_to_image(mlx, path, &img.size.x, &img.size.y);
-	img.pixels = mlx_get_data_addr(img.reference, &img.bits_per_pixel, &img.line_size, &img.endian);
-	return (img);
-}
-
-char	*get_path_of_sprite(t_map map, t_vector position)
-{
-	char *path;
-	
-	if (map.map2d[position.y / 32][position.x / 32] == '1')
-		path = "images/wall.xpm";
-	else if (map.map2d[position.y / 32][position.x / 32]   == '0')
-		path = "images/floor.xpm";
-	else if (map.map2d[position.y / 32][position.x / 32]   == 'E')
-		path = "images/exit.xpm";
-	else if (map.map2d[position.y / 32][position.x / 32]   == 'C')
-		path = "images/collectible.xpm";
-	else if (map.map2d[position.y / 32][position.x / 32]   == 'P')
-		path = "images/heroe.xpm";
-	else
+	if ((game->map.map2d[game->hero.y][game->hero.x] == '1')
+		|| (game->map.map2d[game->hero.y][game->hero.x] == 'E'))
+		game->hero.y += 1;
+	else if(game->map.map2d[game->hero.y][game->hero.x] == '0')
 	{
-		path = NULL;
-		return (path);
+		mlx_clear_window(game->mlx, game->window.reference);
+		game->map.map2d[game->hero.y][game->hero.x] = 'P';
+		game->map.map2d[game->hero.y + 1][game->hero.x] = '0';
+		game->moves++;
+		paint_game(game);
 	}
-	return (path);
-}
-
-void	paint_game(t_map map, t_program program)
-{
-	program.sprite_position.x = 0;
-	while (program.sprite_position.x < map.cols * 32)
+	else if(game->map.map2d[game->hero.y][game->hero.x] == 'C')
 	{
-		program.sprite_position.y = 0;
-		while (program.sprite_position.y < map.lines * 32)
-		{		
-			program.sprite = ft_new_sprite(program.mlx, get_path_of_sprite(map, program.sprite_position));
-			mlx_put_image_to_window(program.mlx, program.window.reference, program.sprite.reference, program.sprite_position.x, program.sprite_position.y);
-			program.sprite_position.y += 32;
-			mlx_destroy_image(program.mlx, program.sprite.reference);
-		}
-		program.sprite_position.x += 32;
+		mlx_clear_window(game->mlx, game->window.reference);
+		game->map.map2d[game->hero.y][game->hero.x] = 'P';
+		game->map.map2d[game->hero.y + 1][game->hero.x] = '0';
+		game->collects++;
+		game->moves++;
+		paint_game(game);
 	}
 }
 
-void	open_window(t_map map)
+void	game_move(int keynote, t_game *game)
 {
-	t_program	program;
+	if (keynote == W)
+	{
+		game->hero.y -= 1;
+		hero_up(game);
+	}
+}
 
-	program.mlx = mlx_init();
-	program.window = ft_new_window(program.mlx, map.cols * 32, map.lines * 32, "Bienvenido al juego de so_long!");
-	paint_game(map, program);
-	// mlx_key_hook(program.window.reference, *ft_input, &program);
-	// hook a function to the loop (it would be called each frame)
-	// mlx_loop_hook(program.mlx, *ft_update, &program);
-	mlx_loop(program.mlx);
+int	key_press(int keynote, t_game *game)
+{
+	if(keynote == ESC)
+		close_game(game);
+	else if (game->endgame == 0)
+	{
+		game_move(keynote, game);
+		printf("Moves: %d\n", game->moves);	
+	}
+	return (0);
+}
+
+void	game_play(t_game *game)
+{
+	mlx_key_hook(game->window.reference, &key_press, &game);
+}
+
+void	img_create(t_game *game)
+{
+	game->img.floor = mlx_xpm_file_to_image
+		(game->mlx, "images/floor.xpm", &game->img.img_w, &game->img.img_h);
+	game->img.wall = mlx_xpm_file_to_image
+		(game->mlx, "images/wall.xpm", &game->img.img_w, &game->img.img_h);
+	game->img.hero = mlx_xpm_file_to_image
+		(game->mlx, "images/hero.xpm", &game->img.img_w, &game->img.img_h);
+	game->img.collect = mlx_xpm_file_to_image
+		(game->mlx, "images/collect.xpm", &game->img.img_w, &game->img.img_h);
+	game->img.exit = mlx_xpm_file_to_image
+		(game->mlx, "images/exit.xpm", &game->img.img_w, &game->img.img_h);
+}
+
+void	open_window(t_game *game)
+{
+	game->mlx = mlx_init();
+	game->window = new_window(game->mlx, game->map.cols * 32, game->map.lines * 32, "Bienvenido al juego de so_long!");
+	game->moves = 0;
+	game->endgame = 0;
+	img_create(game);
+	paint_game(game);
 }
 
 int	main(int argc, char **argv)
 {
-	t_map		map;
-
-	map.lines = 0;
+	t_game	game;
+	
+	game.map.lines = 0;
 	if (argc == 2)
 	{
-		check_map_extension(argv[1]);
-		map = read_map(argv[1]);
-		open_window(map);
+		if (check_map_extension(argv[1]))
+		{
+			game.map = read_map(argv[1]);
+			open_window(&game);
+			game_play(&game);
+			mlx_loop(game.mlx);
+		}
+		else
+		{
+			printf("Error. Map with wrong extension");
+			return (0);
+		}
 	}
 	else
-		ft_putstr_fd("Error. Wrong number of arguments.\n", 2);
+	{
+		printf("Error. Wrong number of arguments.\n");
+		exit(1);
+	}
 	return (0);
 }

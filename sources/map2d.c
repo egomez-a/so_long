@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 14:02:41 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/20 19:09:17 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/28 20:48:56 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,14 @@ void	init_map(t_map map)
 	map.lines = 0;
 }
 
-void	check_map_extension(char *file)
+int	check_map_extension(char *file)
 {
 	char	*s;
 
 	s = ft_strchr(file, '.');
 	if (!s || ft_strncmp(s, ".ber", 5) != 0)
-	{
-		perror("Error. Map with wrong extension");
-		exit (10);
-	}
+		return (0);
+	return (1);
 }
 
 void	check_map_borders(t_map map)
@@ -76,19 +74,19 @@ void	check_map_elements(t_map map)
 			{
 				if (map.map2d[i][j] == 'E')
 				{
-					printf("EXIT it in  %d %d\n", i, j);
+					// printf("EXIT it in  %d %d\n", i, j);
 					map.elems.map_exit++;
 				}	
 				else if (map.map2d[i][j] == 'C')
 				{
-					printf("COLLECTIBLE in  %d %d\n", i, j);
+					// printf("COLLECTIBLE in  %d %d\n", i, j);
 					map.elems.collectible++;
 				}
 				else if (map.map2d[i][j] == 'P')
 				{
-					printf("INITIAL POSITION in  %d %d\n", i, j);
-					map.hero_pos.y = i;
-					map.hero_pos.x = j;
+					// printf("INITIAL POSITION in  %d %d\n", i, j);
+					map.elems.hero.y = i;
+					map.elems.hero.x = j;
 					map.elems.initial_pos++;
 				}
 				else
@@ -97,17 +95,17 @@ void	check_map_elements(t_map map)
 					return ;
 				}
 			}
-			printf("Located wall or floor in  %d %d\n", i, j);
-			printf("Map Exit = %d\n", map.elems.map_exit);
-			printf("Initial position = %d\n", map.elems.initial_pos);
-			printf("Collectionables = %d\n", map.elems.collectible);
+			// printf("Located wall or floor in  %d %d\n", i, j);
+			// printf("Map Exit = %d\n", map.elems.map_exit);
+			// printf("Initial position = %d\n", map.elems.initial_pos);
+			// printf("Collectionables = %d\n", map.elems.collectible);
 			j++;
 		}
 		i++;
 	}
-	printf("Map Exit = %d\n", map.elems.map_exit);
-	printf("Initial position = %d\n", map.elems.initial_pos);
-	printf("Collectionables = %d\n", map.elems.collectible);
+	// printf("Map Exit = %d\n", map.elems.map_exit);
+	// printf("Initial position = %d\n", map.elems.initial_pos);
+	// printf("Collectionables = %d\n", map.elems.collectible);
 	if (map.elems.map_exit < 1)
 	{
 		perror("Error - missing map exit\n");
@@ -147,7 +145,7 @@ int	map_lines(int fd)
 			mlines++;
 	}
 	close(fd);
-	printf("Lines are %d\n", mlines);
+	// printf("Lines are %d\n", mlines);
 	return (mlines);
 }
 
@@ -227,7 +225,7 @@ t_map	read_map(char *file)
 	close(fd);
 	check_map_borders(map);
 	check_map_elements(map);
-	print_map(map);
-	printf("El mapa es de %d x %d\n\n", map.cols, map.lines);
+	// print_map(map);
+	// printf("El mapa es de %d x %d\n\n", map.cols, map.lines);
 	return (map);
 }

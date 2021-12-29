@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/28 17:56:03 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/29 07:26:22 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>		/* open */
 # include "../libft/libft.h"
 
+
 # define BUFFER_SIZE 1
 # define A 97		/* left */
 # define W 119		/* up */
@@ -29,19 +30,20 @@
 # define ESC 65307
 # define ANIMATION_FRAMES 10
 
-/* hero coordinates with an x and y */
-typedef struct	s_hero
-{
-	int	x;
-	int	y;
-}				t_hero;
-
 /* vector with an x and y */
+/* 0,0 is the top left corner */
+/* lines are x, move from 0 down, columns are y, move from 0 right */
 typedef struct	s_vector
 {
 	int	x;
 	int	y;
 }				t_vector;
+
+typedef struct	s_hero
+{
+	int	x;
+	int	y;
+}				t_hero;
 
 /* A pointer to the window and its size */
 typedef struct	s_window {
@@ -49,38 +51,13 @@ typedef struct	s_window {
 	t_vector	size;
 }				t_window;
 
-/* The 4 values that define a color */
-typedef struct s_color {
-	int	r;
-	int g;
-	int b;
-	int a;
-}	t_color;
-
-/* all info needed for an image */
-typedef struct	s_image {
-	void		*reference;
-	t_vector	size;
-	char		*pixels;
-	int			bits_per_pixel;
-	int			line_size;
-	int			endian;
-}				t_image;
-
-/* the program to create windows */
-typedef struct	s_program {
-	void		*mlx;
-	t_window	window;
-	t_image		sprite;
-	t_vector	sprite_position;
-}				t_program;
-
 /* Map elements: collectibles, exit and initial position */
 typedef struct s_ele
 {
-	int		collectible;
-	int		map_exit;
-	int		initial_pos;	
+	int			collectible;
+	int			map_exit;
+	int			initial_pos;
+	t_vector	hero;	
 }				t_ele;
 
 /* Map structure, with lines, columns, matrix and elements */
@@ -90,8 +67,33 @@ typedef struct s_map
 	int		cols;
 	char	**map2d;
 	t_ele	elems;
-	t_hero	hero_pos;
 }				t_map;
+
+typedef struct s_image
+{
+	void	*floor;
+	void	*wall;
+	void	*hero;
+	void	*collect;
+	void	*exit;
+	int		img_w;
+	int		img_h;
+}				t_image;
+
+/* All information for the game to run */
+/* sprite positions are pixels, as we use 32 x 32 images, need adjustment */
+typedef struct s_game
+{
+	void		*mlx;
+	t_window	window;
+	t_vector	position;
+	t_vector	hero;
+	t_map		map;
+	t_image		img;
+	int 		moves;
+	int 		collects;
+	int			endgame;
+}				t_game;
 
 int		main(int argc, char **argv);
 
@@ -101,7 +103,7 @@ int		get_next_line(int fd, char **line);
 int		memclear(char **pointer);
 
 /* check map */
-void	check_map_extension(char *argv);
+int		check_map_extension(char *argv);
 void	init_map(t_map map);
 t_map	read_map(char *file);
 void	check_map_borders(t_map map);
@@ -111,16 +113,26 @@ int		map_lines(int fd);
 int		check_columns(int i, t_map map);
 
 /* window creation */
-void		open_window(t_map map);
-t_window	ft_new_window(void *mlx, int widht, int height, char *name);
-int 		ft_close ();
+void		open_window(t_game *game);
+int			paint_game(t_game *game);
+t_window	new_window(void *mlx, int widht, int height, char *name);
+int 		close_game(t_game *game);
 
-/* include sprites */
-t_image ft_new_image(void* mlx, int width, int height);
-t_image ft_new_sprite(void *mlx, char *path);
+/* draw elements */
+void		draw_exit(t_game *game, int x, int y);
+void		draw_hero(t_game *game, void *image, int x, int y);
+void		draw_image(t_game *game, void *image, int x, int y);
 
 /* Hooks */
-int	ft_input(int key, void *param);
+void		game_play(t_game *game);
+int			key_press(int keynote, t_game *game);
+
+/* moves */
+void		game_move(int keynote, t_game *game);
+void		hero_up(t_game *game);
+// void		hero_down(t_game *game);
+// void		hero_left(t_game *game);
+// void		hero_right(t_game *game);
 
 /* errors */
 void	check_fd(int fd);

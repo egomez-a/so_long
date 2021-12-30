@@ -6,14 +6,14 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/30 19:01:02 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/30 19:47:51 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include "../minilibx/mlx.h"
+# include "minilibx/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>	/* read */
 # include <unistd.h>

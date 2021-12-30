@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/29 07:29:42 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/29 13:07:02 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,10 @@ void	game_move(int keynote, t_game *game)
 	}
 }
 
-int	key_press(int keynote, t_game *game)
+int	key_press(int keynote, void *param)
 {
+	t_game *game = (t_game *)param;
+	
 	if(keynote == ESC)
 		close_game(game);
 	else if (game->endgame == 0)

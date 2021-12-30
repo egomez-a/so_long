@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/29 07:26:22 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/29 13:08:33 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void		draw_image(t_game *game, void *image, int x, int y);
 
 /* Hooks */
 void		game_play(t_game *game);
-int			key_press(int keynote, t_game *game);
+int			key_press(int keynote, void *param);
 
 /* moves */
 void		game_move(int keynote, t_game *game);

@@ -6,12 +6,12 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:25:45 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/03 13:21:20 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/30 13:38:05 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include "mlx.h"
+# include <unistd.h>
+# include "minilibx/mlx.h"
 
 void ft_putchar(char c)
 {
@@ -35,7 +35,7 @@ int main ()
 	win_ptr = mlx_new_window(mlx_ptr, 500, 500, "mlx_42");
 	img = mlx_new_image(mlx_ptr, 1920, 1080);
 	mlx_pixel_put(mlx_ptr, win_ptr, 200, 200, 0xFFFFFF);
-	pixel = mlx_string_put(mlx_ptr, win_ptr, 240, 240, 250, "A");
+	pixel = mlx_string_put(mlx_ptr, win_ptr, 240, 240, 250, "AAAA");
 	mlx_key_hook(win_ptr, deal_key, (void *)0);
 	mlx_loop(mlx_ptr);
 }

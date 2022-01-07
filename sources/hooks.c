@@ -6,14 +6,13 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 18:59:18 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/30 19:02:51 by egomez-a         ###   ########.fr       */
+/*   Updated: 2022/01/07 10:48:50 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../include/so_long.h"
 
-int close_game(t_game *game)
+int	close_game(t_game *game)
 {
 	memclear(game->map.map2d);
 	mlx_destroy_image(game->mlx, game->img.collect);

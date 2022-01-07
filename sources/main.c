@@ -6,24 +6,11 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:15:16 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/29 13:07:02 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/30 19:03:41 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
-
-int close_game(t_game *game)
-{
-	memclear(game->map.map2d);
-	mlx_destroy_image(game->mlx, game->img.collect);
-	mlx_destroy_image(game->mlx, game->img.wall);
-	mlx_destroy_image(game->mlx, game->img.hero);
-	mlx_destroy_image(game->mlx, game->img.floor);
-	mlx_destroy_image(game->mlx, game->img.exit);
-	mlx_destroy_window(game->mlx, game->window.reference);
-	free(game->mlx);
-	exit(0);
-}
 
 void	draw_image(t_game *game, void *image, int x, int y)
 {
@@ -37,20 +24,9 @@ void	draw_image(t_game *game, void *image, int x, int y)
 
 void	draw_hero(t_game *game, void *image, int x, int y)
 {
-	game->map.elems.hero.x = x;
-	game->map.elems.hero.y = y;
+	game->hero.x = x;
+	game->hero.y = y;
 	draw_image(game, image, x, y);
-}
-
-void	draw_exit(t_game *game, int x, int y)
-{
-	if (game->collects == 0)
-	{
-		mlx_destroy_image(game->mlx, game->img.exit);
-		game->img.exit = mlx_xpm_file_to_image
-			(game->mlx, "images/exit.xpm", &game->img.img_w, &game->img.img_h);
-	}
-	draw_image(game, game->img.exit, x, y);
 }
 
 int	paint_game(t_game *game)
@@ -73,7 +49,7 @@ int	paint_game(t_game *game)
 			else if (game->map.map2d[y][x] == 'C')
 				draw_image(game, game->img.collect, x, y);
 			else if (game->map.map2d[y][x] == 'E')
-				draw_exit(game, x, y);
+				draw_image(game, game->img.exit, x, y);
 			x++;
 		}
 		y++;
@@ -85,37 +61,11 @@ t_window	new_window(void *mlx, int widht, int height, char *name)
 {
 	t_window	window;
 
-	/* This mlx function creates a returns a pointer
-	to a new window with a given size and name */
 	window.reference = mlx_new_window(mlx, widht, height, name);
-	printf("puntero creacion window es %p\n", window.reference);
+	// printf("puntero creacion window es %p\n", window.reference);
 	window.size.x = widht;
 	window.size.y = height;
 	return (window);
-}
-
-void		hero_up(t_game *game)
-{
-	if ((game->map.map2d[game->hero.y][game->hero.x] == '1')
-		|| (game->map.map2d[game->hero.y][game->hero.x] == 'E'))
-		game->hero.y += 1;
-	else if(game->map.map2d[game->hero.y][game->hero.x] == '0')
-	{
-		mlx_clear_window(game->mlx, game->window.reference);
-		game->map.map2d[game->hero.y][game->hero.x] = 'P';
-		game->map.map2d[game->hero.y + 1][game->hero.x] = '0';
-		game->moves++;
-		paint_game(game);
-	}
-	else if(game->map.map2d[game->hero.y][game->hero.x] == 'C')
-	{
-		mlx_clear_window(game->mlx, game->window.reference);
-		game->map.map2d[game->hero.y][game->hero.x] = 'P';
-		game->map.map2d[game->hero.y + 1][game->hero.x] = '0';
-		game->collects++;
-		game->moves++;
-		paint_game(game);
-	}
 }
 
 void	game_move(int keynote, t_game *game)
@@ -125,25 +75,21 @@ void	game_move(int keynote, t_game *game)
 		game->hero.y -= 1;
 		hero_up(game);
 	}
-}
-
-int	key_press(int keynote, void *param)
-{
-	t_game *game = (t_game *)param;
-	
-	if(keynote == ESC)
-		close_game(game);
-	else if (game->endgame == 0)
+	else if (keynote == S)
 	{
-		game_move(keynote, game);
-		printf("Moves: %d\n", game->moves);	
+		game->hero.y += 1;
+		hero_down(game);
 	}
-	return (0);
-}
-
-void	game_play(t_game *game)
-{
-	mlx_key_hook(game->window.reference, &key_press, &game);
+	else if (keynote == A)
+	{
+		game->hero.x -= 1;
+		hero_left(game);
+	}
+	else if (keynote == D)
+	{
+		game->hero.x += 1;
+		hero_right(game);
+	}
 }
 
 void	img_create(t_game *game)
@@ -165,7 +111,6 @@ void	open_window(t_game *game)
 	game->mlx = mlx_init();
 	game->window = new_window(game->mlx, game->map.cols * 32, game->map.lines * 32, "Bienvenido al juego de so_long!");
 	game->moves = 0;
-	game->endgame = 0;
 	img_create(game);
 	paint_game(game);
 }
@@ -180,6 +125,7 @@ int	main(int argc, char **argv)
 		if (check_map_extension(argv[1]))
 		{
 			game.map = read_map(argv[1]);
+			game.map.elems.collect = check_map_elements(game.map);
 			open_window(&game);
 			game_play(&game);
 			mlx_loop(game.mlx);

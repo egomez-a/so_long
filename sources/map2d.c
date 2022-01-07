@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 14:02:41 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/28 20:48:56 by egomez-a         ###   ########.fr       */
+/*   Updated: 2021/12/30 18:45:47 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_map_borders(t_map map)
 		if (map.map2d[0][i] != '1' || (map.map2d[map.lines - 1][i] != '1'))
 		{
 			printf("%d  -  %c %c\n", i, map.map2d[0][i], map.map2d[map.lines - 1][i]);
-			perror("Error - horizontal borders not right\n");
+			perror("Error\n Horizontal borders not right\n");
 			exit (11);
 		}
 		i++;
@@ -48,7 +48,7 @@ void	check_map_borders(t_map map)
 		{
 		if (map.map2d[i][0] != '1' || (map.map2d[i][map.cols - 1] != '1'))
 		{
-			perror("Error - vertical borders not right\n");
+			perror("Error\n Vertical borders not right\n");
 			exit (12);
 		}
 		i++;
@@ -56,14 +56,14 @@ void	check_map_borders(t_map map)
 }
 
 /* Check at least one element required */
-void	check_map_elements(t_map map)
+int	check_map_elements(t_map map)
 {
 	int i;
 	int j;
 	
-	map.elems.collectible = 0;
+	map.elems.collect = 0;
 	map.elems.map_exit = 0;
-	map.elems.initial_pos = 0;
+	map.elems.init_pos = 0;
 	i = 0;
 	while (i < map.lines)
 	{
@@ -80,47 +80,48 @@ void	check_map_elements(t_map map)
 				else if (map.map2d[i][j] == 'C')
 				{
 					// printf("COLLECTIBLE in  %d %d\n", i, j);
-					map.elems.collectible++;
+					map.elems.collect++;
 				}
 				else if (map.map2d[i][j] == 'P')
 				{
 					// printf("INITIAL POSITION in  %d %d\n", i, j);
 					map.elems.hero.y = i;
 					map.elems.hero.x = j;
-					map.elems.initial_pos++;
+					map.elems.init_pos++;
 				}
 				else
 				{	
-					perror("Error - non valid map element\n");
-					return ;
+					perror("Error\n Non valid map element\n");
+					return (0);
 				}
 			}
 			// printf("Located wall or floor in  %d %d\n", i, j);
 			// printf("Map Exit = %d\n", map.elems.map_exit);
-			// printf("Initial position = %d\n", map.elems.initial_pos);
-			// printf("Collectionables = %d\n", map.elems.collectible);
+			// printf("Initial position = %d\n", map.elems.init_pos);
+			// printf("Collectionables = %d\n", map.elems.collect);
 			j++;
 		}
 		i++;
 	}
 	// printf("Map Exit = %d\n", map.elems.map_exit);
-	// printf("Initial position = %d\n", map.elems.initial_pos);
-	// printf("Collectionables = %d\n", map.elems.collectible);
+	// printf("Initial position = %d\n", map.elems.init_pos);
+	// printf("Initial Collectibles = %d\n", map.elems.collect);
 	if (map.elems.map_exit < 1)
 	{
-		perror("Error - missing map exit\n");
+		perror("Error\n Missing map exit\n");
 		exit (0);
 	}
-	if (map.elems.collectible < 1)
+	if (map.elems.collect < 1)
 	{
-		perror("Error - missing collectionables\n");
+		perror("Error\n Missing collectionables\n");
 		exit (0);
 	}
-	if (map.elems.initial_pos < 1)
+	if (map.elems.init_pos < 1)
 	{
-		perror("Error - missing initial position\n");
+		perror("Error\n Missing initial position\n");
 		exit (0);
 	}
+	return (map.elems.collect);
 }
 
 /* Count number of lines */
@@ -138,7 +139,7 @@ int	map_lines(int fd)
 			break ;
 		if (char_buffer < 0)
 		{
-			perror("Opening file error - no lines");
+			perror("Error\nOpening file error - no lines");
 			return (-1);
 		}	
 		if (c == '\n')
@@ -207,7 +208,7 @@ t_map	read_map(char *file)
 	map.lines = map_lines(fd);
 	map.map2d = malloc(sizeof(char *) * (map.lines + 1));
 	if (map.map2d == NULL)
-		perror("Malloc error");
+		perror("Error\nMalloc error");
 	fd = open(file, O_RDONLY);
 	i = 0;
 	while (i < map.lines)
@@ -216,7 +217,7 @@ t_map	read_map(char *file)
 		map.cols = check_columns(i, map);
 		if (map.cols == -1)
 		{
-			perror("Error: Map not rentangular\n");
+			perror("Error\nMap not rentangular\n");
 			exit (0);
 		}
 		i++;

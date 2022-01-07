@@ -6,46 +6,11 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:16:05 by egomez-a          #+#    #+#             */
-/*   Updated: 2021/12/13 13:29:45 by egomez-a         ###   ########.fr       */
+/*   Updated: 2022/01/07 19:00:11 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
-
-int	getnextline(int fd, char **line)
-{
-	int		bufferbytes;
-	char	buffer[1];
-	int		i;
-	char	*join;
-
-	*line = malloc(1);
-	if (!(*line) || (!line))
-		return (-1);
-	bufferbytes = read(fd, buffer, 1);
-	while (bufferbytes > 0)
-	{
-		if (buffer[0] == '\0' || buffer[0] == '\n')
-			break; 
-		i = 0;
-		while ((*line)[i])
-			i++;
-		join = malloc(i + 2);
-		if (join == 0)
-			return (-1); 
-		i = 0;
-		while ((*line)[i] != '\0')
-		{
-			join[i] = (*line)[i];
-			i++;
-		}	
-		join[i++] = buffer[0];
-		join[i++] = '\0';
-		free (*line);
-		*line = join; 
-	}
-	return (bufferbytes);
-}
 
 int	memclear(char **pointer)
 {
@@ -94,8 +59,9 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	if (!stvar)
 		stvar = ft_strdup("");
-	while (!ft_strchr(stvar, '\n') && ((ret = read(fd, buf, BUFFER_SIZE)) > 0))
+	while (!ft_strchr(stvar, '\n') && (ret > 0))
 	{
+		ret = read(fd, buf, BUFFER_SIZE);
 		buf[ret] = '\0';
 		temp1 = ft_strjoin(stvar, buf);
 		memclear(&stvar);

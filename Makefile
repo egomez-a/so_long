@@ -6,7 +6,7 @@
 #    By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 13:24:00 by egomez-a          #+#    #+#              #
-#    Updated: 2022/01/07 10:32:15 by egomez-a         ###   ########.fr        #
+#    Updated: 2022/01/07 20:51:02 by egomez-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,10 +20,14 @@ MLX			= minilibx/libmlx.dylib
 
 SRCS 		= 	main.c \
 				map2d.c \
-				hooks.c \
-				moves.c \
+				checkmap.c \
 				get_next_line.c \
-				error.c 
+				window.c \
+				draw.c \
+				hooks.c \
+				moves_ud.c \
+				moves_lr.c \
+				error.c \
 
 OBJS 		= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 

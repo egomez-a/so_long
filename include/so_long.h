@@ -6,7 +6,7 @@
 /*   By: egomez-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:16:42 by egomez-a          #+#    #+#             */
-/*   Updated: 2022/01/07 10:47:35 by egomez-a         ###   ########.fr       */
+/*   Updated: 2022/01/07 20:46:43 by egomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,46 +95,55 @@ typedef struct s_game
 }				t_game;
 
 int			main(int argc, char **argv);
+void		game_move(int keynote, t_game *game);
+
+/* create map - see map2d.c */
+void		init_map(t_map map);
+t_map		read_map(char *file);
+int			map_lines(int fd);
+void		print_map(t_map map);
+
+/* check map - see checkmap.c */
+int			check_map_extension(char *argv);
+void		check_map_borders(t_map map);
+int			check_map_elements(t_map *map);
+int			check_columns(int i, t_map map);
 
 /* get_next_line */
 int			stvar_next_line(int ret, char **stvar, char **line);
 int			get_next_line(int fd, char **line);
 int			memclear(char **pointer);
 
-/* check map */
-int			check_map_extension(char *argv);
-void		init_map(t_map map);
-t_map		read_map(char *file);
-void		check_map_borders(t_map map);
-int			check_map_elements(t_map map);
-void		print_map(t_map map);
-int			map_lines(int fd);
-int			check_columns(int i, t_map map);
-
-/* window creation */
+/* window creation - see window.c */
 void		open_window(t_game *game);
 int			paint_game(t_game *game);
 t_window	new_window(void *mlx, int widht, int height, char *name);
 
-/* draw elements */
-void		draw_exit(t_game *game, int x, int y);
+/* draw elements - see draw.c */
 void		draw_hero(t_game *game, void *image, int x, int y);
 void		draw_image(t_game *game, void *image, int x, int y);
+void		img_create(t_game *game);
 
 /* Hooks - see hooks.c */
 void		game_play(t_game *game);
 int			key_press(int keynote, void *param);
 int			close_game(t_game *game);
 
-/* moves - see moves.c */
-void		game_move(int keynote, t_game *game);
+/* moves up down - see moves_ud.c */
 void		hero_up(t_game *game);
 void		hero_down(t_game *game);
+void		tile_change_up(t_game *game);
+void		tile_change_down(t_game *game);
+
+/* moves left right - see moves_lr.c */
 void		hero_left(t_game *game);
 void		hero_right(t_game *game);
-void		tile_change_up(t_game *game);
+void		tile_change_left(t_game *game);
+void		tile_change_right(t_game *game);
 
-/* errors */
+/* errors - see error.c */
 void		check_fd(int fd);
+void		check_columns_error(int columns);
+void		check_map_elements_error(int m_exit, int collects, int i_pos);
 
 #endif
